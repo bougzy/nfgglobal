@@ -33,7 +33,8 @@ export default async function ProductsPage() {
         </Link>
       </div>
 
-      <div className="rounded-xl border border-white/10 overflow-hidden">
+      {/* Desktop Table */}
+      <div className="hidden md:block rounded-xl border border-white/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -86,7 +87,7 @@ export default async function ProductsPage() {
                     {typeof product.category === "object" &&
                     product.category
                       ? product.category.name
-                      : "—"}
+                      : "\u2014"}
                   </td>
                   <td className="px-4 py-3 text-sm text-white/80">
                     {formatCurrency(product.price, config.currencySymbol)}
@@ -136,19 +137,91 @@ export default async function ProductsPage() {
             </tbody>
           </table>
         </div>
-
-        {products.length === 0 && (
-          <div className="text-center py-12 text-white/40">
-            No products yet.{" "}
-            <Link
-              href="/admin/dashboard/products/new"
-              className="text-amber-400 hover:text-amber-300"
-            >
-              Add your first product
-            </Link>
-          </div>
-        )}
       </div>
+
+      {/* Mobile Card List */}
+      <div className="md:hidden space-y-3">
+        {products.map((product: { _id: string; images: string[]; name: string; category: { name: string } | string; price: number; inventory: number; isActive: boolean; isJustArrived: boolean }) => (
+          <div
+            key={product._id}
+            className="rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3"
+          >
+            <div className="flex items-start gap-3">
+              <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                <Image
+                  src={product.images[0] || "/placeholder-product.png"}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-medium text-white/90 truncate">
+                  {product.name}
+                </h3>
+                <p className="text-xs text-white/50 mt-0.5">
+                  {typeof product.category === "object" && product.category
+                    ? product.category.name
+                    : "\u2014"}
+                </p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  {product.isActive ? (
+                    <Badge variant="success">Active</Badge>
+                  ) : (
+                    <Badge variant="danger">Inactive</Badge>
+                  )}
+                  {product.isJustArrived && (
+                    <Badge variant="gold">New</Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-semibold text-white/90">
+                  {formatCurrency(product.price, config.currencySymbol)}
+                </span>
+                <span
+                  className={`text-xs ${
+                    product.inventory === 0
+                      ? "text-red-400"
+                      : product.inventory <= 5
+                        ? "text-amber-400"
+                        : "text-white/50"
+                  }`}
+                >
+                  Stock: {product.inventory}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href={`/admin/dashboard/products/${product._id}/edit`}>
+                  <Button variant="ghost" size="sm">
+                    Edit
+                  </Button>
+                </Link>
+                <DeleteProductButton
+                  productId={product._id}
+                  productName={product.name}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {products.length === 0 && (
+        <div className="text-center py-12 text-white/40">
+          No products yet.{" "}
+          <Link
+            href="/admin/dashboard/products/new"
+            className="text-amber-400 hover:text-amber-300"
+          >
+            Add your first product
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
