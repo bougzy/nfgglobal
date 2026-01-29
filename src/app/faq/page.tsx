@@ -290,8 +290,8 @@ export default function FAQPage() {
                 <div className="px-6 pb-6 text-white/60 leading-relaxed">
                   Currently, NFG Global operates exclusively online, which allows
                   us to offer competitive prices and serve customers across
-                  Nigeria. We&apos;re based in Lagos and all orders are processed
-                  and shipped from our Lagos warehouse. Plans for a physical
+                  Nigeria. We&apos;re based in Port Harcourt and all orders are processed
+                  and shipped from our Port Harcourt warehouse. Plans for a physical
                   showroom are in the works — stay tuned!
                 </div>
               </details>

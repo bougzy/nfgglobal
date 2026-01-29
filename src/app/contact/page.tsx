@@ -83,7 +83,7 @@ export default function ContactPage() {
                     Location
                   </h3>
                   <p className="text-white/60 leading-relaxed">
-                    Lagos, Nigeria
+                    Port Harcourt, Nigeria
                   </p>
                 </div>
               </div>
