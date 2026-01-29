@@ -9,6 +9,8 @@ import { Footer } from "@/components/layout/footer";
 import { HeroSection } from "@/components/storefront/hero-section";
 import { ProductGrid } from "@/components/storefront/product-grid";
 import { WhatsAppFAB } from "@/components/storefront/whatsapp-fab";
+import { TrustBadges } from "@/components/storefront/trust-badges";
+import { Testimonials } from "@/components/storefront/testimonials";
 
 export default async function HomePage() {
   let products, categories, config;
@@ -44,7 +46,9 @@ export default async function HomePage() {
             "Discover premium jewelry, fashion, and gifts. Shop now and checkout via WhatsApp."
           }
         />
+        <TrustBadges />
         <ProductGrid products={displayProducts} categories={displayCategories} />
+        <Testimonials />
       </main>
       <Footer />
       <WhatsAppFAB />

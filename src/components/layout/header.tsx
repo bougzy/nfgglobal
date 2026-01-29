@@ -7,6 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSiteConfig } from "@/hooks/use-site-config";
 import { useCart } from "@/hooks/use-cart";
 
+const NAV_LINKS = [
+  { label: "Shop", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  { label: "FAQ", href: "/faq" },
+];
+
 export function Header() {
   const config = useSiteConfig();
   const { totalItems } = useCart();
@@ -33,12 +40,15 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/"
-              className="text-white/70 hover:text-white transition-colors text-sm"
-            >
-              Shop
-            </Link>
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-white/70 hover:text-white transition-colors text-sm"
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link
               href="/cart"
               className="relative text-white/70 hover:text-white transition-colors text-sm"
@@ -117,13 +127,16 @@ export function Header() {
             className="md:hidden border-t border-white/10 overflow-hidden"
           >
             <div className="px-4 py-4 space-y-3">
-              <Link
-                href="/"
-                onClick={() => setMenuOpen(false)}
-                className="block text-white/70 hover:text-white transition-colors"
-              >
-                Shop
-              </Link>
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="block text-white/70 hover:text-white transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
               <Link
                 href="/cart"
                 onClick={() => setMenuOpen(false)}
