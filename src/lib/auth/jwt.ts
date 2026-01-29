@@ -1,6 +1,8 @@
 import { SignJWT, jwtVerify, JWTPayload } from "jose";
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+const JWT_SECRET =
+  process.env.JWT_SECRET || "nfgglobal-default-secret-change-in-production";
+const secret = new TextEncoder().encode(JWT_SECRET);
 
 export interface AdminJWTPayload extends JWTPayload {
   sub: string;
