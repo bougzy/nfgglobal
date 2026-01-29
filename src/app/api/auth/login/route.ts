@@ -66,9 +66,16 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Login error:", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Login error:", message);
     return NextResponse.json(
-      { error: "An error occurred during login" },
+      {
+        error:
+          message.includes("ENOTFOUND") || message.includes("connect")
+            ? "Database connection failed. Please try again."
+            : "An error occurred during login",
+      },
       { status: 500 }
     );
   }
