@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbConnect } from "@/lib/db/connection";
-import { Admin } from "@/lib/db/models/admin.model";
-import { verifyPassword } from "@/lib/auth/password";
 import { signToken } from "@/lib/auth/jwt";
 import { checkRateLimit } from "@/lib/auth/rate-limit";
 import { loginSchema } from "@/lib/utils/validators";
+
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
 export async function POST(request: NextRequest) {
   const ip =
@@ -32,28 +32,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await dbConnect();
-
-    const admin = await Admin.findOne({ username: parsed.data.username });
-    if (!admin) {
+    if (
+      parsed.data.username !== ADMIN_USERNAME ||
+      parsed.data.password !== ADMIN_PASSWORD
+    ) {
       return NextResponse.json(
         { error: "Invalid username or password" },
         { status: 401 }
       );
     }
 
-    const isValid = await verifyPassword(
-      parsed.data.password,
-      admin.passwordHash
-    );
-    if (!isValid) {
-      return NextResponse.json(
-        { error: "Invalid username or password" },
-        { status: 401 }
-      );
-    }
-
-    const token = await signToken(admin._id.toString());
+    const token = await signToken("admin");
 
     const response = NextResponse.json({ success: true });
     response.cookies.set("admin_token", token, {
@@ -66,16 +55,9 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown error";
-    console.error("Login error:", message);
+    console.error("Login error:", error);
     return NextResponse.json(
-      {
-        error:
-          message.includes("ENOTFOUND") || message.includes("connect")
-            ? "Database connection failed. Please try again."
-            : "An error occurred during login",
-      },
+      { error: "An error occurred during login" },
       { status: 500 }
     );
   }
